@@ -88,32 +88,50 @@ var finances = [
 ];
 
 
-// The total number of months included in the dataset.
-console.log(`Total number of months: ${finances.length}`);
+// Initialize variables
+var totalMonths = 0;
+var netTotal = 0;
+var totalChange = 0;
+var averageChange = 0;
+var greatestIncrease = ['', 0];
+var greatestDecrease = ['', 0];
 
-// The net total amount of Profit/Losses over the entire period.
-let netTotal = 0;
-for (let i = 0; i < finances.length; i++) {
-  netTotal += finances[i][1];
-}
-console.log(`Net total of Profit/Losses: ${netTotal}`);
+// Iterate through the finances array
+for (var i = 0; i < finances.length; i++) {
+  // Get the month and amount for the current iteration
+  var month = finances[i][0];
+  var amount = finances[i][1];
 
-// The average of the changes in Profit/Losses over the entire period.
-let totalChange = 0;
-for (let i = 1; i < finances.length; i++) {
-  totalChange += finances[i][1] - finances[i - 1][1];
-}
-const averageChange = totalChange / (finances.length - 1);
-console.log(`Average change in Profit/Losses: ${averageChange}`);
+  // Increment the total number of months
+  totalMonths++;
 
-// The greatest increase in profits (date and amount) over the entire period.
-let highestGain = -Infinity;
-let highestGainMonth = '';
-for (let i = 1; i < finances.length; i++) {
-  const change = finances[i][1] - finances[i - 1][1];
-  if (change > highestGain) {
-    highestGain = change;
-    highestGainMonth = finances[i][0];
+  // Add the current amount to the net total
+  netTotal += amount;
+
+  // If this is not the first month, calculate the change from the previous month and add it to the total change
+  if (i > 0) {
+    totalChange += amount - finances[i - 1][1];
+  }
+
+  // If the current amount is greater than the greatest increase, update the greatest increase
+  if (amount > greatestIncrease[1]) {
+    greatestIncrease[0] = month;
+    greatestIncrease[1] = amount;
+  }
+
+  // If the current amount is less than the greatest decrease, update the greatest decrease
+  if (amount < greatestDecrease[1]) {
+    greatestDecrease[0] = month;
+    greatestDecrease[1] = amount;
   }
 }
-console.log(`Greatest increase`);
+
+// Calculate the average change
+averageChange = totalChange / (totalMonths - 1);
+
+// Output the results
+console.log('Total months:', totalMonths);
+console.log('Net total:', netTotal);
+console.log('Average change:', averageChange);
+console.log('Greatest increase:', greatestIncrease[0], greatestIncrease[1]);
+console.log('Greatest decrease:', greatestDecrease[0], greatestDecrease[1]);
